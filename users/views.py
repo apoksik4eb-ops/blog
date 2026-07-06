@@ -14,7 +14,7 @@ class LoginView(View):
             request,
             self.template_name,
             {
-                "user_vlue": "",
+                "user_value": "",
                 "errors": {},
                 "non_field_errors": []
             }
@@ -28,7 +28,7 @@ class LoginView(View):
             request,
             self.template_name,
             {
-                "user_vlue": request.POST.get("username", "").strip(),
+                "user_value": request.POST.get("username", "").strip(),
                 "errors": form.errors,
                 "non_field_errors": form.non_field_errors()
             }
@@ -47,7 +47,7 @@ class RegistrView(View):
             request,
             self.template_name,
             {
-                "user_vlue": "",
+                "user_value": "",
                 "email_value": "",
                 "errors": {},
                 "non_field_errors": []
@@ -62,7 +62,7 @@ class RegistrView(View):
                 request,
                 self.template_name,
                 {
-                    "user_vlue": request.POST.get("username", "").strip(),
+                    "user_value": request.POST.get("username", "").strip(),
                     "email_value": request.POST.get("email", "").strip(),
                     "errors": form.errors,
                     "non_field_errors": form.non_field_errors()
