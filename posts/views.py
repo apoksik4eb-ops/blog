@@ -27,7 +27,7 @@ class PostListView(ListView):
     paginate_by = 10
 
 class FavoritePostListView(LoginRequiredMixin, ListView):
-    template_name = "post/favorite_list.html"
+    template_name = "posts/favorite_list.html"
     context_object_name = "posts"
     paginate_by = 10
 
@@ -39,7 +39,7 @@ class PostDetailView(DetailView):
     model = Post
     template_name = "posts/post_detail.html"
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect("login")
         
@@ -47,7 +47,7 @@ class PostDetailView(DetailView):
         comment_text = request.POST.get("text", "").strip()
 
         if comment_text:
-            Comment.object.create(
+            Comment.objects.create(
                 post=self.object,
                 author=request.user,
                 text=comment_text
@@ -61,7 +61,7 @@ class PostDetailView(DetailView):
     
 
 class PostCreateView(LoginRequiredMixin, View):
-    template_name = "post/post_form.html"
+    template_name = "posts/post_form.html"
 
     def get(self, request):
         return render(
@@ -96,10 +96,10 @@ class PostCreateView(LoginRequiredMixin, View):
 class AuthorRequiredMixin(UserPassesTestMixin):
     def get_object(self, queryset=None):
         if not hasattr(self, "object"):
-            self.object = self.get_object_or_404(Post, pk=self.kwargs["pk"])
+            self.object = get_object_or_404(Post, pk=self.kwargs["pk"])
         return self.object
     
-    def text_func(self):
+    def test_func(self):
         obj = self.get_object()
         return obj.author == self.request.user
     
@@ -149,7 +149,7 @@ class PostDeleteView(LoginRequiredMixin, AuthorRequiredMixin, DeleteView):
     success_url = reverse_lazy("post_list")
 
     def form_valid(self, form):
-        return super().form_viled(form)
+        return super().form_valid(form)
     
 
 class ToggleFavoriteView(LoginRequiredMixin, View):
@@ -159,7 +159,7 @@ class ToggleFavoriteView(LoginRequiredMixin, View):
         if post.favorites.filter(pk=request.user.pk).exists():
             post.favorites.remove(request.user)
         else:
-            post.favoritex.add(request.user)
+            post.favorites.add(request.user)
 
         return redirect(post)
     
